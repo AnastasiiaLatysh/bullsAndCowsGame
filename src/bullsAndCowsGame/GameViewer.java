@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class GameViewer extends JFrame {
@@ -27,14 +29,20 @@ public class GameViewer extends JFrame {
     JLabel amountOfFails;
     JTable table;
     DefaultTableModel tableModel;
+    JLabel cowIcon;
+    JLabel bullIcon;
 
     public GameViewer()
     {
-        setSize(600,600);
+        setSize(1000,600);
         setLocation(100,100);
         setTitle("Bulls and Cows");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addWindowListener( new WindowAdapter() {
+            public void windowOpened( WindowEvent e ){
+                inputLine.requestFocus();
+            }});
 
         container = getContentPane();
         container.setBackground(Color.white);
@@ -46,6 +54,7 @@ public class GameViewer extends JFrame {
         createFileMenu();
         createHelpMenu();
         createLabels();
+        createIcon();
 
         createTable();
         createInputLine();
@@ -55,20 +64,38 @@ public class GameViewer extends JFrame {
     private void createButtons()
     {
         guess = new JButton("Guess");
-        guess.setBounds(10,482,186,40);
+        guess.setBounds(220,482,280,40);
         container.add(guess);
         restart = new JButton("Restart");
-        restart.setBounds(206,482,186,40);
+        restart.setBounds(510,482,280,40);
         container.add(restart);
         clear = new JButton("Clear");
-        clear.setBounds(402,482,186,40);
+        clear.setBounds(594,432,186,40);
         container.add(clear);
+
+    }
+
+    private void createIcon(){
+        ImageIcon imageIconCow = new ImageIcon(System.getProperty("user.dir") + "/src/bullsAndCowsGame/cow.jpg");
+        cowIcon = new JLabel(imageIconCow);
+        cowIcon.setBounds(0,130,230,300);
+        container.add(cowIcon);
+
+        ImageIcon imageIconBull = new ImageIcon(System.getProperty("user.dir") + "/src/bullsAndCowsGame/bull.jpg");
+        bullIcon = new JLabel(imageIconBull);
+        bullIcon.setBounds(780,130,230,300);
+        container.add(bullIcon);
 
     }
 
     private void createTable(){
         String[] columnNames = {"Number", "Bulls", "Cows", "Attempts"};
-        tableModel = new DefaultTableModel(columnNames,0);
+        tableModel = new DefaultTableModel(columnNames,0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // or a condition at your choice with row and column
+            }
+        };
         table = new JTable(tableModel);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -85,37 +112,37 @@ public class GameViewer extends JFrame {
 
 
         scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(20,140,560,280);
+        scrollPane.setBounds(220,140,560,280);
         container.add(scrollPane);
     }
 
     private void createInputLine()
     {
         inputLine = new JTextField();
-        inputLine.setBounds(10,432,580,40);
+        inputLine.setBounds(220,432,360,40);
+        inputLine.setDocument(new JTextLimit(4));
         container.add(inputLine);
     }
 
     private void createLabels()
     {
         amountOfFails = new JLabel("Fails : 0");
-        amountOfFails.setBounds(370,40,100,102);
+        amountOfFails.setBounds(570,70,100,102);
         amountOfFails.setForeground(Color.red);
         amountOfFails.setFont(setFontStyle(20));
         container.add(amountOfFails);
 
         amountOfWins = new JLabel("Wins : 0");
-        amountOfWins.setBounds(170,40,100,102);
+        amountOfWins.setBounds(370,70,100,102);
         amountOfWins.setForeground(Color.green);
         amountOfWins.setFont(setFontStyle(20));
         container.add(amountOfWins);
 
-        startLabel = new JLabel("<html><div style='text-align: center;'><u>" +
-                "Guess a number of 4 digits which doesn't contain duplicate digits. " +
-                "You have 10 attempts to win!" + "</u></div></html>");
-        startLabel.setBounds(55,0,500,100);
-        startLabel.setForeground(Color.darkGray);
-        startLabel.setFont(setFontStyle(17));
+        startLabel = new JLabel("<html><h2><center>" +
+                "Guess a number of 4 digits which doesn't contain duplicate digits.<br></center></h2>" +
+                "<h3><center>You have 10 attempts to win!" + "</center></h3></html>");
+        startLabel.setBounds(200,0,800,100);
+        startLabel.setForeground(Color.DARK_GRAY);
         container.add(startLabel);
     }
 
@@ -154,4 +181,5 @@ public class GameViewer extends JFrame {
     void showDialog(String message){
         JOptionPane.showMessageDialog(null, message);
     }
+
 }

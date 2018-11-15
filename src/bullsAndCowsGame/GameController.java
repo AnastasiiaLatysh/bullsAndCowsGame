@@ -19,7 +19,7 @@ public class GameController implements ActionListener {
     public GameController(GameViewer gameViewer, GameModel gameModel){
         this.gameViewer = gameViewer;
         this.gameModel = gameModel;
-        // add actionListener viewers object
+
         this.gameViewer.guess.addActionListener(this);
         this.gameViewer.clear.addActionListener(this);
         this.gameViewer.restart.addActionListener(this);
@@ -109,8 +109,8 @@ public class GameController implements ActionListener {
         try{
             int userPotentialNumber = Integer.parseInt(sUserPotentialNumber);
             if (userPotentialNumber < 1000 || userPotentialNumber > 9999) {
-                gameViewer.showDialog("Do you remember that number contains 4 digits?)\n Not more and not less!" +
-                        "\nNote number can not start from 0.");
+                gameViewer.showDialog("Do you remember that number contains 4 digits?)\n " +
+                        "Note number can not start from 0.");
                 return false;
             } else if (isNumberContainsDuplicateDigits(userPotentialNumber)) {
                 gameViewer.showDialog("Do you remember that number doesn't contain duplicate digits?)");
@@ -120,7 +120,7 @@ public class GameController implements ActionListener {
         }
         catch (NumberFormatException ex){
             gameViewer.showDialog("Please, enter correct number. Note number can not start from 0.\n" +
-                    "Only number in interval from 1000 till 999 are allowed");
+                    "Only number in interval from 1000 till 9999 are allowed");
             return false;
         }
     }
@@ -179,8 +179,10 @@ public class GameController implements ActionListener {
 
     private void resetStatistics()
     {
-        gameViewer.amountOfFails.setText("Fails: " + 0);
-        gameViewer.amountOfWins.setText("Wins: " + 0);
+        amountOfFails = 0;
+        amountOfWins = 0;
+        gameViewer.amountOfFails.setText("Fails: " + amountOfFails);
+        gameViewer.amountOfWins.setText("Wins: " + amountOfWins);
     }
 
     private String getInstructionsText(){
